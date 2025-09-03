@@ -7,11 +7,26 @@ namespace guozi::numeric
 class BigInteger
 {
 public:
+	BigInteger() = default;
+	BigInteger &operator=(const BigInteger &) = default;
+	BigInteger(const BigInteger &) = default;
+	BigInteger &operator=(BigInteger &&) = default;
+	BigInteger(BigInteger &&) = default;
+
 	std::string ToString();
 	static BigInteger FromString(const std::string &str);
 
 public: // friends
 	friend BigInteger operator+(const BigInteger &lhs, const BigInteger &rhs);
+	friend BigInteger operator-(const BigInteger &lhs, const BigInteger &rhs);
+	friend BigInteger operator*(const BigInteger &lhs, const BigInteger &rhs);
+
+private:
+	BigInteger(std::vector<uint16_t> data);
+
+	BigInteger operator<<(uint16_t shiftSize);
+
+	bool IsZero() const;
 
 private:
 	/**
@@ -26,5 +41,7 @@ private:
 };
 
 BigInteger operator+(const BigInteger &lhs, const BigInteger &rhs);
+BigInteger operator-(const BigInteger &lhs, const BigInteger &rhs);
+BigInteger operator*(const BigInteger &lhs, const BigInteger &rhs);
 
 } // namespace guozi::numeric

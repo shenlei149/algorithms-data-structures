@@ -3,8 +3,6 @@
 #include <iomanip>
 #include <sstream>
 
-#include <iostream>
-
 namespace guozi::numeric
 {
 
@@ -29,6 +27,29 @@ CountLeadingZeros(std::string_view sv)
 	return count;
 }
 } // namespace
+
+BigInteger::BigInteger(std::vector<uint16_t> data)
+	: digits_(std::move(data))
+{
+}
+
+BigInteger
+BigInteger::operator<<(uint16_t shiftSize)
+{
+	if (IsZero())
+	{
+		return *this;
+	}
+
+	auto origin = this->ToString();
+	return FromString(origin + std::string(shiftSize, '0'));
+}
+
+bool
+BigInteger::IsZero() const
+{
+	return digits_.empty();
+}
 
 std::string
 BigInteger::ToString()
@@ -83,13 +104,16 @@ BigInteger
 operator+(const BigInteger &lhs, const BigInteger &rhs)
 {
 	BigInteger sum {};
-	auto leftLength = lhs.digits_.size();
-	auto rightLength = rhs.digits_.size();
+
+	const auto &leftDigits = lhs.digits_;
+	const auto &rightDigits = rhs.digits_;
+	auto leftLength = leftDigits.size();
+	auto rightLength = rightDigits.size();
 	auto length = std::min(leftLength, rightLength);
 	uint16_t carry { 0 };
 	for (size_t i = 0; i < length; i++)
 	{
-		carry = lhs.digits_[i] + rhs.digits_[i] + carry;
+		carry = leftDigits[i] + rightDigits[i] + carry;
 		sum.digits_.push_back(carry % BigInteger::Base);
 		carry /= BigInteger::Base;
 	}
@@ -98,7 +122,7 @@ operator+(const BigInteger &lhs, const BigInteger &rhs)
 	{
 		for (size_t i = length; i < leftLength; i++)
 		{
-			carry = lhs.digits_[i] + carry;
+			carry = leftDigits[i] + carry;
 			sum.digits_.push_back(carry % BigInteger::Base);
 			carry /= BigInteger::Base;
 		}
@@ -107,7 +131,7 @@ operator+(const BigInteger &lhs, const BigInteger &rhs)
 	{
 		for (size_t i = length; i < rightLength; i++)
 		{
-			carry = rhs.digits_[i] + carry;
+			carry = rightDigits[i] + carry;
 			sum.digits_.push_back(carry % BigInteger::Base);
 			carry /= BigInteger::Base;
 		}
@@ -120,4 +144,111 @@ operator+(const BigInteger &lhs, const BigInteger &rhs)
 
 	return sum;
 }
+
+BigInteger
+operator-(const BigInteger &lhs, const BigInteger &rhs)
+{
+	// suppose lhs > rhs
+
+	if (rhs.IsZero())
+	{
+		return lhs;
+	}
+
+	const auto &leftDigits = lhs.digits_;
+	const auto &rightDigits = rhs.digits_;
+	BigInteger diff {};
+	auto leftLength = leftDigits.size();
+	auto rightLength = rightDigits.size();
+	uint16_t carry { 0 };
+	for (size_t i = 0; i < rightLength; i++)
+	{
+		if (leftDigits[i] >= rightDigits[i] + carry)
+		{
+			diff.digits_.push_back(leftDigits[i] - rightDigits[i] - carry);
+			carry = 0;
+		}
+		else
+		{
+			diff.digits_.push_back(BigInteger::Base + leftDigits[i] - rightDigits[i] - carry);
+			carry = 1;
+		}
+	}
+
+	if (leftLength > rightLength)
+	{
+		for (size_t i = rightLength; i < leftLength; i++)
+		{
+			if (leftDigits[i] >= carry)
+			{
+				diff.digits_.push_back(leftDigits[i] - carry);
+				carry = 0;
+			}
+			else
+			{
+				diff.digits_.push_back(BigInteger::Base + leftDigits[i] - carry);
+				carry = 1;
+			}
+		}
+	}
+
+	// TODO normalize...
+	return diff;
+}
+
+BigInteger
+operator*(const BigInteger &lhs, const BigInteger &rhs)
+{
+	if (lhs.IsZero() || rhs.IsZero())
+	{
+		return {};
+	}
+
+	const auto &leftDigits = lhs.digits_;
+	const auto &rightDigits = rhs.digits_;
+	auto leftLength = leftDigits.size();
+	auto rightLength = rightDigits.size();
+
+	if (leftLength == 1 && rightLength == 1)
+	{
+		BigInteger mul {};
+		uint32_t num1 = leftDigits.front();
+		uint32_t num2 = rightDigits.front();
+		uint32_t num = num1 * num2;
+
+		mul.digits_.push_back(num % BigInteger::Base);
+		num /= BigInteger::Base;
+		if (num > 0)
+		{
+			mul.digits_.push_back(num);
+		}
+
+		return mul;
+	}
+
+	auto length = std::max(leftLength, rightLength);
+	length = std::bit_ceil(length);
+	auto half = length / 2;
+
+	BigInteger leftSecond { std::vector(leftDigits.begin(), leftDigits.begin() + std::min(half, leftLength)) };
+	BigInteger leftFirst {};
+	if (leftLength > half)
+	{
+		leftFirst.digits_ = std::vector(leftDigits.begin() + half, leftDigits.end());
+	}
+
+	BigInteger rightSecond { std::vector(rightDigits.begin(), rightDigits.begin() + std::min(half, rightLength)) };
+	BigInteger rightFirst {};
+	if (rightLength > half)
+	{
+		rightFirst.digits_ = std::vector(rightDigits.begin() + half, rightDigits.end());
+	}
+
+	auto lower = leftSecond * rightSecond;
+	auto high = leftFirst * rightFirst;
+	auto middle = ((leftFirst + leftSecond) * (rightFirst + rightSecond)) - high - lower;
+
+	return (high << (length * BigInteger::BaseLength)) + (middle << (half * BigInteger::BaseLength)) + lower;
+}
+
 } // namespace guozi::numeric
