@@ -5,5 +5,4 @@ cmake -B build .
 
 cp build/compile_commands.json .
 
-cd build
-make -j$(nproc)
+cmake --build build -j$(nproc)
