@@ -41,6 +41,10 @@ BigInteger::operator<<(uint16_t shiftSize)
 		return *this;
 	}
 
+	// TODO shiftSize % BigInteger::BaseLength == 0
+	// push_back(0) then copy this.digits_
+	// faster than converting to string?
+
 	auto origin = this->ToString();
 	return FromString(origin + std::string(shiftSize, '0'));
 }
