@@ -235,7 +235,7 @@ CheckOptions:
   readability-identifier-naming.LocalConstantCase: 'camelBack'
   readability-identifier-naming.LocalConstantPointerCase: 'camelBack'
   readability-identifier-naming.LocalPointerCase: 'camelBack'
-  readability-identifier-naming.ConstexprVariableCase: 'camelBack'
+  readability-identifier-naming.ConstexprVariableCase: 'CamelCase'
   readability-identifier-naming.StaticVariableCase: 'CamelCase'
   readability-identifier-naming.VariableCase: 'camelBack'
   readability-identifier-naming.ParameterCase: 'camelBack'
