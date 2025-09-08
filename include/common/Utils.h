@@ -4,9 +4,9 @@ namespace guozi::utils
 {
 
 template<std::random_access_iterator Iterator,
-		 typename Greater = std::greater<typename std::iterator_traits<Iterator>::value_type>>
+		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
 bool
-IsSorted(Iterator begin, Iterator end, Greater greater = {})
+IsSorted(Iterator begin, Iterator end, Less less = {})
 {
 	for (Iterator i = begin; i < end; i++)
 	{
@@ -15,7 +15,7 @@ IsSorted(Iterator begin, Iterator end, Greater greater = {})
 			break;
 		}
 
-		if (greater(*i, *(i + 1)))
+		if (less(*(i + 1), *i))
 		{
 			return false;
 		}

@@ -6,6 +6,20 @@
 
 #include "common/Utils.h"
 
+TEST(Sort, IsSorted)
+{
+	std::vector<int> data1 { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	std::vector<int> data2 { 2, 1, 3, 4, 5, 6, 7, 8, 9 };
+	std::vector<int> data3 { 2, 2, 3, 4, 5, 6, 7, 8, 9 };
+	std::vector<int> data4 { 1, 2, 5, 5, 5, 5, 7, 8, 9 };
+	std::vector<int> data5 { 1, 2, 3, 4, 5, 6, 7, 9, 8 };
+	ASSERT_TRUE(guozi::utils::IsSorted(data1.begin(), data1.end()));
+	ASSERT_FALSE(guozi::utils::IsSorted(data2.begin(), data2.end()));
+	ASSERT_TRUE(guozi::utils::IsSorted(data3.begin(), data3.end()));
+	ASSERT_TRUE(guozi::utils::IsSorted(data4.begin(), data4.end()));
+	ASSERT_FALSE(guozi::utils::IsSorted(data5.begin(), data5.end()));
+}
+
 using DataType = typename std::vector<int>;
 using IteratorType = typename DataType::iterator;
 using FunctionType = typename std::function<void(IteratorType, IteratorType)>;
