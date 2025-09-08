@@ -1,4 +1,5 @@
 #include <iterator>
+#include <vector>
 
 namespace guozi::sort
 {
@@ -48,12 +49,41 @@ namespace
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
 void
-InternalMergeSort(Iterator begin,
-				  Iterator mid,
-				  Iterator end,
-				  std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
-				  Less less)
+InternalMerge(Iterator begin,
+			  Iterator mid,
+			  Iterator end,
+			  std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
+			  Less less)
 {
+	auto left = begin;
+	auto right = mid;
+	auto index = 0; // index of aux
+	while (true)
+	{
+		if (left == mid) // left is exhausted
+		{
+			break;
+		}
+		else if (right == end) // right is exhausted
+		{
+			std::copy(left, mid, end - std::distance(left, mid));
+			break;
+		}
+		else if (less(*right, *left))
+		{
+			aux[index] = *right;
+			index++;
+			right++;
+		}
+		else
+		{
+			aux[index] = *left;
+			index++;
+			left++;
+		}
+	}
+
+	std::copy(aux.begin(), aux.begin() + index, begin);
 }
 
 template<std::random_access_iterator Iterator,
@@ -71,8 +101,8 @@ InternalMergeSort(Iterator begin,
 
 	Iterator mid = begin + (end - begin) / 2;
 	InternalMergeSort(begin, mid, aux, less);
-	InternalMergeSort(min, end, aux, less);
-	InternalMerge(begin, min, end, aux, less);
+	InternalMergeSort(mid, end, aux, less);
+	InternalMerge(begin, mid, end, aux, less);
 }
 } // namespace
 

@@ -22,7 +22,12 @@ static const FunctionType InsertionSort = [](IteratorType begin, IteratorType en
 	guozi::sort::InsertionSort(begin, end);
 };
 
-static const std::array<FunctionType, 2> Functions { SelectionSort, InsertionSort };
+static const FunctionType MergeSort = [](IteratorType begin, IteratorType end)
+{
+	guozi::sort::MergeSort(begin, end);
+};
+
+static const std::array<FunctionType, 3> Functions { SelectionSort, InsertionSort, MergeSort };
 
 inline DataType
 GenerateData(size_t length)
