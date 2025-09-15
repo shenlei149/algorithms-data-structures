@@ -20,6 +20,15 @@ TEST(Sort, IsSorted)
 	ASSERT_FALSE(guozi::utils::IsSorted(data5.begin(), data5.end()));
 }
 
+TEST(Sort, CountInversion)
+{
+	std::vector<int> example { 1, 3, 5, 2, 4, 6 };
+	ASSERT_EQ(3, guozi::sort::CountInversion(example.begin(), example.end()));
+
+	std::vector<int> data { 3, 4, 2, 8, 6, 7, 1, 5, 9 };
+	ASSERT_EQ(13, guozi::sort::CountInversion(data.begin(), data.end()));
+}
+
 using DataType = typename std::vector<int>;
 using IteratorType = typename DataType::iterator;
 using FunctionType = typename std::function<void(IteratorType, IteratorType)>;

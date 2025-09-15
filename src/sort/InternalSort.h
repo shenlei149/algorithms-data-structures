@@ -4,6 +4,93 @@
 namespace guozi::sort
 {
 
+namespace
+{
+
+template<std::random_access_iterator Iterator,
+		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
+size_t
+InternalMergeAndCountInversion(Iterator begin,
+							   Iterator mid,
+							   Iterator end,
+							   std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
+							   Less less)
+{
+	size_t count = 0;
+	auto left = begin;
+	auto right = mid;
+	auto index = 0; // index of aux
+	while (true)
+	{
+		if (left == mid) // left is exhausted
+		{
+			break;
+		}
+		else if (right == end) // right is exhausted
+		{
+			std::copy(left, mid, end - std::distance(left, mid));
+			break;
+		}
+		else if (less(*right, *left))
+		{
+			aux[index] = *right;
+			index++;
+			right++;
+
+			count += std::distance(left, mid);
+		}
+		else
+		{
+			aux[index] = *left;
+			index++;
+			left++;
+		}
+	}
+
+	std::copy(aux.begin(), aux.begin() + index, begin);
+
+	return count;
+}
+
+template<std::random_access_iterator Iterator,
+		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
+size_t
+InternalCountInversion(Iterator begin,
+					   Iterator end,
+					   std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
+					   Less less)
+{
+	if (begin >= end || begin + 1 == end)
+	{
+		return 0;
+	}
+
+	Iterator mid = begin + (end - begin) / 2;
+	auto left = InternalCountInversion(begin, mid, aux, less);
+	auto right = InternalCountInversion(mid, end, aux, less);
+	auto split = InternalMergeAndCountInversion(begin, mid, end, aux, less);
+
+	return left + right + split;
+}
+} // namespace
+
+template<std::random_access_iterator Iterator,
+		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
+size_t
+CountInversion(Iterator begin, Iterator end, Less less = {})
+{
+	if (begin >= end || begin + 1 == end)
+	{
+		return 0;
+	}
+
+	using ValueType = typename std::iterator_traits<Iterator>::value_type;
+	std::vector<ValueType> aux;
+	aux.resize(std::distance(begin, end));
+
+	return InternalCountInversion(begin, end, aux, less);
+}
+
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
 void
