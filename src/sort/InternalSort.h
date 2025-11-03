@@ -210,4 +210,43 @@ MergeSort(Iterator begin, Iterator end, Less less = {})
 	InternalMergeSort(begin, end, aux, less);
 }
 
+namespace
+{
+template<std::random_access_iterator Iterator,
+		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
+Iterator
+QuickSortPartition(Iterator begin, Iterator end, Less less)
+{
+	Iterator i = begin + 1;
+	Iterator p = begin;
+	for (Iterator j = i; j < end; j++)
+	{
+		if (less(*j, *p))
+		{
+			std::swap(*i, *j);
+			i++;
+		}
+	}
+
+	std::swap(*p, *(i - 1));
+
+	return i - 1;
+}
+} // namespace
+
+template<std::random_access_iterator Iterator,
+		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
+void
+QuickSort(Iterator begin, Iterator end, Less less = {})
+{
+	if (begin >= end || begin + 1 == end)
+	{
+		return;
+	}
+
+	auto p = QuickSortPartition(begin, end, less);
+	QuickSort(begin, p, less);
+	QuickSort(p + 1, end, less);
+}
+
 } // namespace guozi::sort
