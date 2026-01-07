@@ -1,7 +1,9 @@
 #!/bin/bash
 
-mkdir build
-cmake -B build .
+set -e -u
+
+mkdir -p build
+cmake -B build . -DCMAKE_BUILD_TYPE=Debug
 
 cp build/compile_commands.json .
 
