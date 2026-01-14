@@ -6,7 +6,7 @@
 namespace guozi::graph
 {
 
-template<typename V = std::monostate, typename E = std::monostate>
+template<bool Directed, typename V = std::monostate, typename E = std::monostate>
 class Graph
 {
 public:
@@ -39,10 +39,6 @@ private:
 	};
 
 public:
-	Graph(bool directed = false)
-		: isDirected_(directed)
-	{}
-
 	size_t AddVertex(const V &data = {})
 	{
 		vertices_.emplace_back(data);
@@ -61,7 +57,7 @@ public:
 
 		size_t newEdgeIdx = edges_.size() - 1;
 		vertices_[srcId].outgoingEdgeIndices_.push_back(newEdgeIdx);
-		if (!isDirected_)
+		if constexpr (!Directed)
 		{
 			vertices_[dstId].outgoingEdgeIndices_.push_back(newEdgeIdx);
 		}
@@ -90,7 +86,12 @@ public:
 private:
 	std::vector<Vertex> vertices_;
 	std::vector<Edge> edges_;
-	bool isDirected_;
 };
+
+template<typename V = std::monostate, typename E = std::monostate>
+using UndirectedGraph = Graph<false, V, E>;
+
+template<typename V = std::monostate, typename E = std::monostate>
+using DirectedGraph = Graph<true, V, E>;
 
 } // namespace guozi::graph

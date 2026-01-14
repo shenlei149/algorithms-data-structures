@@ -6,9 +6,9 @@
 
 using namespace guozi::graph;
 
-Graph<> CreateGraph1()
+UndirectedGraph<> CreateGraph1()
 {
-	Graph<> graph(false /* undirected */);
+	UndirectedGraph<> graph;
 	for (size_t i = 0; i < 13; i++)
 	{
 		graph.AddVertex();
@@ -33,7 +33,7 @@ Graph<> CreateGraph1()
 
 TEST(GraphTest, Basic)
 {
-	Graph<std::string, int> cityMap(false /* undirected */);
+	UndirectedGraph<std::string, int> cityMap;
 
 	auto bj = cityMap.AddVertex("Beijing");
 	auto sh = cityMap.AddVertex("Shanghai");
