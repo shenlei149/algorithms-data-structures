@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "ConnectedComponent.h"
 #include "Graph.h"
 #include "Path.h"
 
@@ -44,47 +45,47 @@ TEST(GraphTest, Basic)
 	auto e3 = cityMap.AddEdge(sh, sz, 1400);
 	auto e4 = cityMap.AddEdge(gz, sz, 100);
 
-	ASSERT_EQ(4, cityMap.GetVertexCount());
-	ASSERT_EQ(4, cityMap.GetEdgeCount());
+	EXPECT_EQ(4, cityMap.GetVertexCount());
+	EXPECT_EQ(4, cityMap.GetEdgeCount());
 
-	ASSERT_EQ("Beijing", cityMap.GetVertex(bj));
-	ASSERT_EQ("Shanghai", cityMap.GetVertex(sh));
-	ASSERT_EQ("Guangzhou", cityMap.GetVertex(gz));
-	ASSERT_EQ("Shenzhen", cityMap.GetVertex(sz));
+	EXPECT_EQ("Beijing", cityMap.GetVertex(bj));
+	EXPECT_EQ("Shanghai", cityMap.GetVertex(sh));
+	EXPECT_EQ("Guangzhou", cityMap.GetVertex(gz));
+	EXPECT_EQ("Shenzhen", cityMap.GetVertex(sz));
 
-	ASSERT_EQ(1200, cityMap.GetEdge(e1));
-	ASSERT_EQ(2100, cityMap.GetEdge(e2));
-	ASSERT_EQ(1400, cityMap.GetEdge(e3));
-	ASSERT_EQ(100, cityMap.GetEdge(e4));
+	EXPECT_EQ(1200, cityMap.GetEdge(e1));
+	EXPECT_EQ(2100, cityMap.GetEdge(e2));
+	EXPECT_EQ(1400, cityMap.GetEdge(e3));
+	EXPECT_EQ(100, cityMap.GetEdge(e4));
 
-	ASSERT_EQ((std::vector<size_t> { e1, e2 }), cityMap.GetOutgoingEdgeIndices(bj));
-	ASSERT_EQ((std::vector<size_t> { e1, e3 }), cityMap.GetOutgoingEdgeIndices(sh));
-	ASSERT_EQ((std::vector<size_t> { e2, e4 }), cityMap.GetOutgoingEdgeIndices(gz));
-	ASSERT_EQ((std::vector<size_t> { e3, e4 }), cityMap.GetOutgoingEdgeIndices(sz));
+	EXPECT_EQ((std::vector<size_t> { e1, e2 }), cityMap.GetOutgoingEdgeIndices(bj));
+	EXPECT_EQ((std::vector<size_t> { e1, e3 }), cityMap.GetOutgoingEdgeIndices(sh));
+	EXPECT_EQ((std::vector<size_t> { e2, e4 }), cityMap.GetOutgoingEdgeIndices(gz));
+	EXPECT_EQ((std::vector<size_t> { e3, e4 }), cityMap.GetOutgoingEdgeIndices(sz));
 }
 
 TEST(GraphTest, Path)
 {
 	auto graph = CreateGraph1();
-	ASSERT_EQ(13, graph.GetVertexCount());
-	ASSERT_EQ(13, graph.GetEdgeCount());
+	EXPECT_EQ(13, graph.GetVertexCount());
+	EXPECT_EQ(13, graph.GetEdgeCount());
 
 	Path path1(graph, 0);
 
-	ASSERT_TRUE(path1.HasPathTo(0));
-	ASSERT_TRUE(path1.HasPathTo(1));
-	ASSERT_TRUE(path1.HasPathTo(2));
-	ASSERT_TRUE(path1.HasPathTo(3));
-	ASSERT_TRUE(path1.HasPathTo(4));
-	ASSERT_TRUE(path1.HasPathTo(5));
-	ASSERT_TRUE(path1.HasPathTo(6));
+	EXPECT_TRUE(path1.HasPathTo(0));
+	EXPECT_TRUE(path1.HasPathTo(1));
+	EXPECT_TRUE(path1.HasPathTo(2));
+	EXPECT_TRUE(path1.HasPathTo(3));
+	EXPECT_TRUE(path1.HasPathTo(4));
+	EXPECT_TRUE(path1.HasPathTo(5));
+	EXPECT_TRUE(path1.HasPathTo(6));
 
-	ASSERT_FALSE(path1.HasPathTo(7));
-	ASSERT_FALSE(path1.HasPathTo(8));
-	ASSERT_FALSE(path1.HasPathTo(9));
-	ASSERT_FALSE(path1.HasPathTo(10));
-	ASSERT_FALSE(path1.HasPathTo(11));
-	ASSERT_FALSE(path1.HasPathTo(12));
+	EXPECT_FALSE(path1.HasPathTo(7));
+	EXPECT_FALSE(path1.HasPathTo(8));
+	EXPECT_FALSE(path1.HasPathTo(9));
+	EXPECT_FALSE(path1.HasPathTo(10));
+	EXPECT_FALSE(path1.HasPathTo(11));
+	EXPECT_FALSE(path1.HasPathTo(12));
 
 	EXPECT_EQ((std::vector<size_t> { 0 }), static_cast<std::vector<size_t>>(path1.PathTo(0)));
 	EXPECT_EQ((std::vector<size_t> { 0, 1 }), static_cast<std::vector<size_t>>(path1.PathTo(1)));
@@ -97,20 +98,20 @@ TEST(GraphTest, Path)
 
 	Path path2(graph, 9);
 
-	ASSERT_TRUE(path2.HasPathTo(9));
-	ASSERT_TRUE(path2.HasPathTo(10));
-	ASSERT_TRUE(path2.HasPathTo(11));
-	ASSERT_TRUE(path2.HasPathTo(12));
+	EXPECT_TRUE(path2.HasPathTo(9));
+	EXPECT_TRUE(path2.HasPathTo(10));
+	EXPECT_TRUE(path2.HasPathTo(11));
+	EXPECT_TRUE(path2.HasPathTo(12));
 
-	ASSERT_FALSE(path2.HasPathTo(0));
-	ASSERT_FALSE(path2.HasPathTo(1));
-	ASSERT_FALSE(path2.HasPathTo(2));
-	ASSERT_FALSE(path2.HasPathTo(3));
-	ASSERT_FALSE(path2.HasPathTo(4));
-	ASSERT_FALSE(path2.HasPathTo(5));
-	ASSERT_FALSE(path2.HasPathTo(6));
-	ASSERT_FALSE(path2.HasPathTo(7));
-	ASSERT_FALSE(path2.HasPathTo(8));
+	EXPECT_FALSE(path2.HasPathTo(0));
+	EXPECT_FALSE(path2.HasPathTo(1));
+	EXPECT_FALSE(path2.HasPathTo(2));
+	EXPECT_FALSE(path2.HasPathTo(3));
+	EXPECT_FALSE(path2.HasPathTo(4));
+	EXPECT_FALSE(path2.HasPathTo(5));
+	EXPECT_FALSE(path2.HasPathTo(6));
+	EXPECT_FALSE(path2.HasPathTo(7));
+	EXPECT_FALSE(path2.HasPathTo(8));
 
 	EXPECT_EQ((std::vector<size_t> { 9 }), static_cast<std::vector<size_t>>(path2.PathTo(9)));
 	EXPECT_EQ((std::vector<size_t> { 9, 10 }), static_cast<std::vector<size_t>>(path2.PathTo(10)));
@@ -118,4 +119,49 @@ TEST(GraphTest, Path)
 	EXPECT_EQ((std::vector<size_t> { 9, 12 }), static_cast<std::vector<size_t>>(path2.PathTo(12)));
 	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.PathTo(7)));
 	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.PathTo(3)));
+}
+
+TEST(GraphTest, UndirectedConnectedComponent)
+{
+	auto graph = CreateGraph1();
+	auto cc = UndirectedConnectedComponent(graph);
+
+	EXPECT_EQ(3, cc.Count());
+
+	EXPECT_TRUE(cc.Connected(0, 0));
+	EXPECT_TRUE(cc.Connected(1, 0));
+	EXPECT_TRUE(cc.Connected(2, 0));
+	EXPECT_TRUE(cc.Connected(3, 0));
+	EXPECT_TRUE(cc.Connected(4, 0));
+	EXPECT_TRUE(cc.Connected(5, 0));
+	EXPECT_TRUE(cc.Connected(6, 0));
+
+	EXPECT_FALSE(cc.Connected(0, 7));
+	EXPECT_FALSE(cc.Connected(0, 8));
+	EXPECT_FALSE(cc.Connected(0, 9));
+	EXPECT_FALSE(cc.Connected(0, 10));
+	EXPECT_FALSE(cc.Connected(0, 11));
+	EXPECT_FALSE(cc.Connected(0, 12));
+
+	EXPECT_TRUE(cc.Connected(7, 8));
+	EXPECT_FALSE(cc.Connected(7, 9));
+
+	EXPECT_TRUE(cc.Connected(9, 10));
+	EXPECT_TRUE(cc.Connected(11, 12));
+
+	EXPECT_EQ(0, cc.Id(0));
+	EXPECT_EQ(0, cc.Id(1));
+	EXPECT_EQ(0, cc.Id(2));
+	EXPECT_EQ(0, cc.Id(3));
+	EXPECT_EQ(0, cc.Id(4));
+	EXPECT_EQ(0, cc.Id(5));
+	EXPECT_EQ(0, cc.Id(6));
+
+	EXPECT_EQ(1, cc.Id(7));
+	EXPECT_EQ(1, cc.Id(8));
+
+	EXPECT_EQ(2, cc.Id(9));
+	EXPECT_EQ(2, cc.Id(10));
+	EXPECT_EQ(2, cc.Id(11));
+	EXPECT_EQ(2, cc.Id(12));
 }

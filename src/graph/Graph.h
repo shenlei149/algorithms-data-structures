@@ -16,8 +16,7 @@ public:
 private:
 	struct Vertex
 	{
-		[[no_unique_address]]
-		V data_;
+		[[no_unique_address]] V data_;
 		std::vector<size_t> outgoingEdgeIndices_;
 
 		Vertex(const V &data)
@@ -30,8 +29,7 @@ private:
 		size_t src_;
 		size_t dst_;
 
-		[[no_unique_address]]
-		E data_;
+		[[no_unique_address]] E data_;
 
 		Edge(size_t src, size_t dst, const E &data)
 			: src_(src)
@@ -71,17 +69,9 @@ public:
 		return newEdgeIdx;
 	}
 
-	[[nodiscard]]
-	size_t GetVertexCount() const
-	{
-		return vertices_.size();
-	}
+	[[nodiscard]] size_t GetVertexCount() const { return vertices_.size(); }
 
-	[[nodiscard]]
-	size_t GetEdgeCount() const
-	{
-		return edges_.size();
-	}
+	[[nodiscard]] size_t GetEdgeCount() const { return edges_.size(); }
 
 	[[nodiscard]]
 	const std::vector<size_t> &GetOutgoingEdgeIndices(size_t vertexId) const
@@ -89,29 +79,13 @@ public:
 		return vertices_[vertexId].outgoingEdgeIndices_;
 	}
 
-	[[nodiscard]]
-	size_t GetSrcVertexId(size_t edgeId) const
-	{
-		return edges_[edgeId].src_;
-	}
+	[[nodiscard]] size_t GetSrcVertexId(size_t edgeId) const { return edges_[edgeId].src_; }
 
-	[[nodiscard]]
-	size_t GetDstVertexId(size_t edgeId) const
-	{
-		return edges_[edgeId].dst_;
-	}
+	[[nodiscard]] size_t GetDstVertexId(size_t edgeId) const { return edges_[edgeId].dst_; }
 
-	[[nodiscard]]
-	const V &GetVertex(size_t vertexId) const
-	{
-		return vertices_[vertexId].data_;
-	}
+	[[nodiscard]] const V &GetVertex(size_t vertexId) const { return vertices_[vertexId].data_; }
 
-	[[nodiscard]]
-	const E &GetEdge(size_t edgeId) const
-	{
-		return edges_[edgeId].data_;
-	}
+	[[nodiscard]] const E &GetEdge(size_t edgeId) const { return edges_[edgeId].data_; }
 
 private:
 	std::vector<Vertex> vertices_;

@@ -13,20 +13,20 @@ TEST(Sort, IsSorted)
 	std::vector<int> data3 { 2, 2, 3, 4, 5, 6, 7, 8, 9 };
 	std::vector<int> data4 { 1, 2, 5, 5, 5, 5, 7, 8, 9 };
 	std::vector<int> data5 { 1, 2, 3, 4, 5, 6, 7, 9, 8 };
-	ASSERT_TRUE(guozi::utils::IsSorted(data1.begin(), data1.end()));
-	ASSERT_FALSE(guozi::utils::IsSorted(data2.begin(), data2.end()));
-	ASSERT_TRUE(guozi::utils::IsSorted(data3.begin(), data3.end()));
-	ASSERT_TRUE(guozi::utils::IsSorted(data4.begin(), data4.end()));
-	ASSERT_FALSE(guozi::utils::IsSorted(data5.begin(), data5.end()));
+	EXPECT_TRUE(guozi::utils::IsSorted(data1.begin(), data1.end()));
+	EXPECT_FALSE(guozi::utils::IsSorted(data2.begin(), data2.end()));
+	EXPECT_TRUE(guozi::utils::IsSorted(data3.begin(), data3.end()));
+	EXPECT_TRUE(guozi::utils::IsSorted(data4.begin(), data4.end()));
+	EXPECT_FALSE(guozi::utils::IsSorted(data5.begin(), data5.end()));
 }
 
 TEST(Sort, CountInversion)
 {
 	std::vector<int> example { 1, 3, 5, 2, 4, 6 };
-	ASSERT_EQ(3, guozi::sort::CountInversion(example.begin(), example.end()));
+	EXPECT_EQ(3, guozi::sort::CountInversion(example.begin(), example.end()));
 
 	std::vector<int> data { 3, 4, 2, 8, 6, 7, 1, 5, 9 };
-	ASSERT_EQ(13, guozi::sort::CountInversion(data.begin(), data.end()));
+	EXPECT_EQ(13, guozi::sort::CountInversion(data.begin(), data.end()));
 }
 
 using DataType = typename std::vector<int>;
@@ -71,7 +71,7 @@ TEST(Sort, AllInOne)
 		{
 			auto data = GenerateData(length);
 			func(data.begin(), data.end());
-			ASSERT_TRUE(guozi::utils::IsSorted(data.begin(), data.end()));
+			EXPECT_TRUE(guozi::utils::IsSorted(data.begin(), data.end()));
 		}
 	}
 }

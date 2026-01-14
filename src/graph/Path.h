@@ -17,11 +17,7 @@ class Path;
 class PathResult
 {
 public:
-	[[nodiscard]]
-	std::span<const size_t> GetPath() const
-	{
-		return path_;
-	}
+	[[nodiscard]] std::span<const size_t> GetPath() const { return path_; }
 
 	using const_iterator = std::vector<size_t>::const_iterator;
 
@@ -72,6 +68,7 @@ class Path
 
 		bool OnFinishVertex(size_t) const { return true; }
 
+	private:
 		const Graph &graph_;
 		Path &path_;
 	};
@@ -85,11 +82,7 @@ public:
 		BFS(graph, srcId, Visitor(graph, *this), visited_);
 	}
 
-	[[nodiscard]]
-	bool HasPathTo(size_t dstId) const
-	{
-		return visited_[dstId] != 0;
-	}
+	[[nodiscard]] bool HasPathTo(size_t dstId) const { return visited_[dstId] != 0; }
 
 	[[nodiscard]]
 	PathResult PathTo(size_t dstId) const
