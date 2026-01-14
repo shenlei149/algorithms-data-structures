@@ -3,51 +3,56 @@
 #include <stdexcept>
 #include <vector>
 
-template<typename V, typename E>
+namespace guozi::graph
+{
+
+template<typename V = std::monostate, typename E = std::monostate>
 class Graph
 {
+public:
+	using VertexType = V;
+	using EdgeType = E;
+
 private:
 	struct Vertex
 	{
+		[[no_unique_address]]
 		V data_;
 		std::vector<size_t> outgoingEdgeIndices_;
 
 		Vertex(const V &data)
 			: data_(data)
-		{
-		}
+		{}
 	};
 
 	struct Edge
 	{
 		size_t src_;
 		size_t dst_;
+
+		[[no_unique_address]]
 		E data_;
 
 		Edge(size_t src, size_t dst, const E &data)
 			: src_(src)
 			, dst_(dst)
 			, data_(data)
-		{
-		}
+		{}
 	};
 
 public:
 	Graph(bool directed = false)
 		: isDirected_(directed)
-	{
-	}
+	{}
 
-	size_t
-	AddVertex(const V &data)
+	size_t AddVertex(const V &data = {})
 	{
 		vertices_.emplace_back(data);
 
 		return vertices_.size() - 1;
 	}
 
-	size_t
-	AddEdge(size_t srcId, size_t dstId, const E &data)
+	size_t AddEdge(size_t srcId, size_t dstId, const E &data = {})
 	{
 		if (srcId >= vertices_.size() || dstId >= vertices_.size())
 		{
@@ -67,36 +72,43 @@ public:
 	}
 
 	[[nodiscard]]
-	size_t
-	GetVertexCount() const
+	size_t GetVertexCount() const
 	{
 		return vertices_.size();
 	}
 
 	[[nodiscard]]
-	size_t
-	GetEdgeCount() const
+	size_t GetEdgeCount() const
 	{
 		return edges_.size();
 	}
 
 	[[nodiscard]]
-	const V &
-	GetVertex(size_t vertexId) const
-	{
-		return vertices_[vertexId].data_;
-	}
-
-	[[nodiscard]]
-	const std::vector<size_t> &
-	GetOutgoingEdges(size_t vertexId) const
+	const std::vector<size_t> &GetOutgoingEdgeIndices(size_t vertexId) const
 	{
 		return vertices_[vertexId].outgoingEdgeIndices_;
 	}
 
 	[[nodiscard]]
-	const E &
-	GetEdge(size_t edgeId) const
+	size_t GetSrcVertexId(size_t edgeId) const
+	{
+		return edges_[edgeId].src_;
+	}
+
+	[[nodiscard]]
+	size_t GetDstVertexId(size_t edgeId) const
+	{
+		return edges_[edgeId].dst_;
+	}
+
+	[[nodiscard]]
+	const V &GetVertex(size_t vertexId) const
+	{
+		return vertices_[vertexId].data_;
+	}
+
+	[[nodiscard]]
+	const E &GetEdge(size_t edgeId) const
 	{
 		return edges_[edgeId].data_;
 	}
@@ -106,3 +118,5 @@ private:
 	std::vector<Edge> edges_;
 	bool isDirected_;
 };
+
+} // namespace guozi::graph
