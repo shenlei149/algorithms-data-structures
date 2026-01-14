@@ -9,12 +9,11 @@ namespace
 
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-size_t
-InternalMergeAndCountInversion(Iterator begin,
-							   Iterator mid,
-							   Iterator end,
-							   std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
-							   Less less)
+size_t InternalMergeAndCountInversion(Iterator begin,
+									  Iterator mid,
+									  Iterator end,
+									  std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
+									  Less less)
 {
 	size_t count = 0;
 	auto left = begin;
@@ -54,11 +53,10 @@ InternalMergeAndCountInversion(Iterator begin,
 
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-size_t
-InternalCountInversion(Iterator begin,
-					   Iterator end,
-					   std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
-					   Less less)
+size_t InternalCountInversion(Iterator begin,
+							  Iterator end,
+							  std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
+							  Less less)
 {
 	if (begin >= end || begin + 1 == end)
 	{
@@ -76,8 +74,7 @@ InternalCountInversion(Iterator begin,
 
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-size_t
-CountInversion(Iterator begin, Iterator end, Less less = {})
+size_t CountInversion(Iterator begin, Iterator end, Less less = {})
 {
 	if (begin >= end || begin + 1 == end)
 	{
@@ -93,8 +90,7 @@ CountInversion(Iterator begin, Iterator end, Less less = {})
 
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-void
-SelectionSort(Iterator begin, Iterator end, Less less = {})
+void SelectionSort(Iterator begin, Iterator end, Less less = {})
 {
 	for (Iterator i = begin; i < end; i++)
 	{
@@ -116,8 +112,7 @@ SelectionSort(Iterator begin, Iterator end, Less less = {})
 
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-void
-InsertionSort(Iterator begin, Iterator end, Less less = {})
+void InsertionSort(Iterator begin, Iterator end, Less less = {})
 {
 	for (Iterator i = begin + 1; i < end; i++)
 	{
@@ -135,12 +130,11 @@ namespace
 {
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-void
-InternalMerge(Iterator begin,
-			  Iterator mid,
-			  Iterator end,
-			  std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
-			  Less less)
+void InternalMerge(Iterator begin,
+				   Iterator mid,
+				   Iterator end,
+				   std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
+				   Less less)
 {
 	auto left = begin;
 	auto right = mid;
@@ -175,11 +169,10 @@ InternalMerge(Iterator begin,
 
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-void
-InternalMergeSort(Iterator begin,
-				  Iterator end,
-				  std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
-				  Less less)
+void InternalMergeSort(Iterator begin,
+					   Iterator end,
+					   std::vector<typename std::iterator_traits<Iterator>::value_type> &aux,
+					   Less less)
 {
 	if (begin >= end || begin + 1 == end)
 	{
@@ -195,8 +188,7 @@ InternalMergeSort(Iterator begin,
 
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-void
-MergeSort(Iterator begin, Iterator end, Less less = {})
+void MergeSort(Iterator begin, Iterator end, Less less = {})
 {
 	if (begin >= end || begin + 1 == end)
 	{
@@ -214,8 +206,7 @@ namespace
 {
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-Iterator
-QuickSortPartition(Iterator begin, Iterator end, Less less)
+Iterator QuickSortPartition(Iterator begin, Iterator end, Less less)
 {
 	Iterator i = begin + 1;
 	Iterator p = begin;
@@ -236,8 +227,7 @@ QuickSortPartition(Iterator begin, Iterator end, Less less)
 
 template<std::random_access_iterator Iterator,
 		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
-void
-QuickSort(Iterator begin, Iterator end, Less less = {})
+void QuickSort(Iterator begin, Iterator end, Less less = {})
 {
 	if (begin >= end || begin + 1 == end)
 	{

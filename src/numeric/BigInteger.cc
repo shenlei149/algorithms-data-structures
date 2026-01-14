@@ -8,8 +8,7 @@ namespace guozi::numeric
 
 namespace
 {
-size_t
-CountLeadingZeros(std::string_view sv)
+size_t CountLeadingZeros(std::string_view sv)
 {
 	size_t count = 0;
 	for (auto &&c : sv)
@@ -30,11 +29,9 @@ CountLeadingZeros(std::string_view sv)
 
 BigInteger::BigInteger(std::vector<uint16_t> data)
 	: digits_(std::move(data))
-{
-}
+{}
 
-BigInteger
-BigInteger::operator<<(uint16_t shiftSize)
+BigInteger BigInteger::operator<<(uint16_t shiftSize)
 {
 	if (IsZero())
 	{
@@ -49,14 +46,9 @@ BigInteger::operator<<(uint16_t shiftSize)
 	return FromString(origin + std::string(shiftSize, '0'));
 }
 
-bool
-BigInteger::IsZero() const
-{
-	return digits_.empty();
-}
+bool BigInteger::IsZero() const { return digits_.empty(); }
 
-std::string
-BigInteger::ToString()
+std::string BigInteger::ToString()
 {
 	std::stringstream str {};
 	for (auto digit = digits_.rbegin(); digit != digits_.rend(); digit++)
@@ -70,8 +62,7 @@ BigInteger::ToString()
 	return std::string { view.substr(count) };
 }
 
-BigInteger
-BigInteger::FromString(const std::string &str)
+BigInteger BigInteger::FromString(const std::string &str)
 {
 	BigInteger ret {};
 
@@ -104,8 +95,7 @@ BigInteger::FromString(const std::string &str)
 	return ret;
 }
 
-BigInteger
-operator+(const BigInteger &lhs, const BigInteger &rhs)
+BigInteger operator+(const BigInteger &lhs, const BigInteger &rhs)
 {
 	BigInteger sum {};
 
@@ -149,8 +139,7 @@ operator+(const BigInteger &lhs, const BigInteger &rhs)
 	return sum;
 }
 
-BigInteger
-operator-(const BigInteger &lhs, const BigInteger &rhs)
+BigInteger operator-(const BigInteger &lhs, const BigInteger &rhs)
 {
 	// suppose lhs > rhs
 
@@ -200,8 +189,7 @@ operator-(const BigInteger &lhs, const BigInteger &rhs)
 	return diff;
 }
 
-BigInteger
-operator*(const BigInteger &lhs, const BigInteger &rhs)
+BigInteger operator*(const BigInteger &lhs, const BigInteger &rhs)
 {
 	if (lhs.IsZero() || rhs.IsZero())
 	{
