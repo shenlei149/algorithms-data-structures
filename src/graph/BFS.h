@@ -64,4 +64,48 @@ bool BFS(const Graph &graph, size_t startId, const Visitor &visitor, VisitedCont
 	return true;
 }
 
+template<typename Graph, typename Visitor, typename VisitedContainer>
+bool DFS(const Graph &graph, size_t startId, const Visitor &visitor, VisitedContainer &visited)
+{
+	visited[startId] = true;
+
+	if (!visitor.OnDiscoverVertex(startId))
+	{
+		return false;
+	}
+
+	for (const auto &edgeId : graph.GetOutgoingEdgeIndices(startId))
+	{
+		if (!visitor.OnExamineEdge(edgeId))
+		{
+			return false;
+		}
+
+		auto neighbor = graph.GetDstVertexId(edgeId);
+		if (!visited[neighbor])
+		{
+			if (!visitor.OnTreeEdge(edgeId))
+			{
+				return false;
+			}
+
+			DFS(graph, neighbor, visitor, visited);
+		}
+		else
+		{
+			if (!visitor.OnNonTreeEdge(edgeId))
+			{
+				return false;
+			}
+		}
+	}
+
+	if (!visitor.OnFinishVertex(current))
+	{
+		return false;
+	}
+
+	return true;
+}
+
 } // namespace guozi::graph
