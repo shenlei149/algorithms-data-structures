@@ -45,8 +45,8 @@ TEST(GraphTest, Basic)
 	auto e3 = cityMap.AddEdge(sh, sz, 1400);
 	auto e4 = cityMap.AddEdge(gz, sz, 100);
 
-	EXPECT_EQ(4, cityMap.GetVertexCount());
-	EXPECT_EQ(4, cityMap.GetEdgeCount());
+	EXPECT_EQ(4, cityMap.VertexCount());
+	EXPECT_EQ(4, cityMap.EdgeCount());
 
 	EXPECT_EQ("Beijing", cityMap.GetVertex(bj));
 	EXPECT_EQ("Shanghai", cityMap.GetVertex(sh));
@@ -58,17 +58,17 @@ TEST(GraphTest, Basic)
 	EXPECT_EQ(1400, cityMap.GetEdge(e3));
 	EXPECT_EQ(100, cityMap.GetEdge(e4));
 
-	EXPECT_EQ((std::vector<size_t> { e1, e2 }), cityMap.GetOutgoingEdgeIndices(bj));
-	EXPECT_EQ((std::vector<size_t> { e1, e3 }), cityMap.GetOutgoingEdgeIndices(sh));
-	EXPECT_EQ((std::vector<size_t> { e2, e4 }), cityMap.GetOutgoingEdgeIndices(gz));
-	EXPECT_EQ((std::vector<size_t> { e3, e4 }), cityMap.GetOutgoingEdgeIndices(sz));
+	EXPECT_EQ((std::vector<size_t> { e1, e2 }), cityMap.OutgoingEdgeIndices(bj));
+	EXPECT_EQ((std::vector<size_t> { e1, e3 }), cityMap.OutgoingEdgeIndices(sh));
+	EXPECT_EQ((std::vector<size_t> { e2, e4 }), cityMap.OutgoingEdgeIndices(gz));
+	EXPECT_EQ((std::vector<size_t> { e3, e4 }), cityMap.OutgoingEdgeIndices(sz));
 }
 
 TEST(GraphTest, Path)
 {
 	auto graph = CreateGraph1();
-	EXPECT_EQ(13, graph.GetVertexCount());
-	EXPECT_EQ(13, graph.GetEdgeCount());
+	EXPECT_EQ(13, graph.VertexCount());
+	EXPECT_EQ(13, graph.EdgeCount());
 
 	Path path1(graph, 0);
 

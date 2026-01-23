@@ -5,8 +5,8 @@
 #include <span>
 #include <vector>
 
-#include "BFS.h"
 #include "Graph.h"
+#include "Traversals.h"
 
 namespace guozi::graph
 {
@@ -76,8 +76,8 @@ class Path
 public:
 	Path(const Graph &graph, size_t srcId)
 		: srcId_(srcId)
-		, edgeTo_(graph.GetVertexCount(), -1)
-		, visited_(graph.GetVertexCount(), false)
+		, edgeTo_(graph.VertexCount(), -1)
+		, visited_(graph.VertexCount(), false)
 	{
 		BFS(graph, srcId, Visitor(graph, *this), visited_);
 	}

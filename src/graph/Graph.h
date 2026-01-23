@@ -65,12 +65,12 @@ public:
 		return newEdgeIdx;
 	}
 
-	[[nodiscard]] size_t GetVertexCount() const { return vertices_.size(); }
+	[[nodiscard]] size_t VertexCount() const { return vertices_.size(); }
 
-	[[nodiscard]] size_t GetEdgeCount() const { return edges_.size(); }
+	[[nodiscard]] size_t EdgeCount() const { return edges_.size(); }
 
 	[[nodiscard]]
-	const std::vector<size_t> &GetOutgoingEdgeIndices(size_t vertexId) const
+	const std::vector<size_t> &OutgoingEdgeIndices(size_t vertexId) const
 	{
 		return vertices_[vertexId].outgoingEdgeIndices_;
 	}

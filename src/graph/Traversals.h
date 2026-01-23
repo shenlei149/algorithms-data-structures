@@ -22,7 +22,7 @@ bool BFS(const Graph &graph, size_t startId, const Visitor &visitor, VisitedCont
 		auto current = queue.front();
 		queue.pop();
 
-		for (const auto &edgeId : graph.GetOutgoingEdgeIndices(current))
+		for (const auto &edgeId : graph.OutgoingEdgeIndices(current))
 		{
 			if (!visitor.OnExamineEdge(edgeId))
 			{
@@ -74,7 +74,7 @@ bool DFS(const Graph &graph, size_t startId, const Visitor &visitor, VisitedCont
 		return false;
 	}
 
-	for (const auto &edgeId : graph.GetOutgoingEdgeIndices(startId))
+	for (const auto &edgeId : graph.OutgoingEdgeIndices(startId))
 	{
 		if (!visitor.OnExamineEdge(edgeId))
 		{
@@ -100,7 +100,7 @@ bool DFS(const Graph &graph, size_t startId, const Visitor &visitor, VisitedCont
 		}
 	}
 
-	if (!visitor.OnFinishVertex(current))
+	if (!visitor.OnFinishVertex(startId))
 	{
 		return false;
 	}

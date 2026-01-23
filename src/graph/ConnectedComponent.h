@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <vector>
 
-#include "BFS.h"
 #include "Graph.h"
+#include "Traversals.h"
 
 namespace guozi::graph
 {
@@ -38,10 +38,10 @@ class UndirectedConnectedComponent
 
 public:
 	UndirectedConnectedComponent(const Graph &graph)
-		: ccIds_(graph.GetVertexCount())
-		, visited_(graph.GetVertexCount(), false)
+		: ccIds_(graph.VertexCount())
+		, visited_(graph.VertexCount(), false)
 	{
-		for (size_t i = 0; i < graph.GetVertexCount(); ++i)
+		for (size_t i = 0; i < graph.VertexCount(); ++i)
 		{
 			if (visited_[i] == 0)
 			{
