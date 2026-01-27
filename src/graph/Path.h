@@ -5,7 +5,6 @@
 #include <span>
 #include <vector>
 
-#include "Graph.h"
 #include "Traversals.h"
 
 namespace guozi::graph

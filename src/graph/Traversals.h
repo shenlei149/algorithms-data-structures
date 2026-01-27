@@ -2,6 +2,8 @@
 
 #include <queue>
 
+#include "Graph.h"
+
 namespace guozi::graph
 {
 

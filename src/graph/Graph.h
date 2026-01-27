@@ -39,21 +39,21 @@ private:
 	};
 
 public:
-	size_t AddVertex(const V &data = {})
+	size_t AddVertex(const V data = {})
 	{
-		vertices_.emplace_back(data);
+		vertices_.emplace_back(std::move(data));
 
 		return vertices_.size() - 1;
 	}
 
-	size_t AddEdge(size_t srcId, size_t dstId, const E &data = {})
+	size_t AddEdge(size_t srcId, size_t dstId, const E data = {})
 	{
 		if (srcId >= vertices_.size() || dstId >= vertices_.size())
 		{
 			throw std::out_of_range("Vertex index out of range");
 		}
 
-		edges_.emplace_back(srcId, dstId, data);
+		edges_.emplace_back(srcId, dstId, std::move(data));
 
 		size_t newEdgeIdx = edges_.size() - 1;
 		vertices_[srcId].outgoingEdgeIndices_.push_back(newEdgeIdx);
@@ -82,6 +82,25 @@ public:
 	[[nodiscard]] const V &GetVertex(size_t vertexId) const { return vertices_[vertexId].data_; }
 
 	[[nodiscard]] const E &GetEdge(size_t edgeId) const { return edges_[edgeId].data_; }
+
+	Graph<Directed, V, E> Transpose() const
+	{
+		Graph<Directed, V, E> reverseGraph;
+		reverseGraph.vertices_.reserve(vertices_.size());
+		reverseGraph.edges_.reserve(edges_.size());
+
+		for (size_t i = 0; i < vertices_.size(); i++)
+		{
+			reverseGraph.AddVertex(vertices_[i].data_);
+		}
+
+		for (size_t i = 0; i < edges_.size(); i++)
+		{
+			reverseGraph.AddEdge(edges_[i].dst_, edges_[i].src_, edges_[i].data_);
+		}
+
+		return reverseGraph;
+	}
 
 private:
 	std::vector<Vertex> vertices_;

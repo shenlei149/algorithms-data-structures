@@ -4,17 +4,18 @@
 #include <vector>
 
 #include "Graph.h"
+#include "Topology.h"
 #include "Traversals.h"
 
 namespace guozi::graph
 {
 
-template<typename Graph>
-class UndirectedConnectedComponent
+template<typename Graph, bool Strongly>
+class ConnectedComponent
 {
 	struct Visitor
 	{
-		Visitor(UndirectedConnectedComponent &cc)
+		Visitor(ConnectedComponent &cc)
 			: cc_(cc)
 		{}
 
@@ -33,21 +34,40 @@ class UndirectedConnectedComponent
 		bool OnFinishVertex(size_t) const { return true; }
 
 	private:
-		UndirectedConnectedComponent &cc_;
+		ConnectedComponent &cc_;
 	};
 
 public:
-	UndirectedConnectedComponent(const Graph &graph)
+	ConnectedComponent(const Graph &graph)
 		: ccIds_(graph.VertexCount())
-		, visited_(graph.VertexCount(), false)
 	{
-		for (size_t i = 0; i < graph.VertexCount(); ++i)
-		{
-			if (visited_[i] == 0)
-			{
-				BFS(graph, i, Visitor(*this), visited_);
+		std::vector<uint8_t> visited(graph.VertexCount(), false);
 
-				ccCount_++;
+		if constexpr (Strongly)
+		{
+			// Kosaraju's algorithm
+			auto reverseGraph = graph.Transpose();
+			Topology topo(reverseGraph);
+			for (size_t i : topo.Order())
+			{
+				if (visited[i] == 0)
+				{
+					BFS(graph, i, Visitor(*this), visited);
+
+					ccCount_++;
+				}
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < graph.VertexCount(); ++i)
+			{
+				if (visited[i] == 0)
+				{
+					BFS(graph, i, Visitor(*this), visited);
+
+					ccCount_++;
+				}
 			}
 		}
 	}
@@ -60,8 +80,13 @@ public:
 
 private:
 	std::vector<size_t> ccIds_;
-	std::vector<uint8_t> visited_;
 	size_t ccCount_ = 0;
 };
+
+template<typename Graph>
+using StronglyConnectedComponent = ConnectedComponent<Graph, true>;
+
+template<typename Graph>
+using UndirectedConnectedComponent = ConnectedComponent<Graph, false>;
 
 } // namespace guozi::graph

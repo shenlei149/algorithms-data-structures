@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
 #include "ConnectedComponent.h"
-#include "Graph.h"
 #include "Path.h"
+#include "Topology.h"
 
 using namespace guozi::graph;
 
-UndirectedGraph<> CreateGraph1()
+UndirectedGraph<> CreateUndirectedGraph()
 {
 	UndirectedGraph<> graph;
 	for (size_t i = 0; i < 13; i++)
@@ -28,6 +28,39 @@ UndirectedGraph<> CreateGraph1()
 	graph.AddEdge(9, 11);
 	graph.AddEdge(5, 3);
 
+	return graph;
+}
+
+DirectedGraph<> CreateDirectedGraph()
+{
+	DirectedGraph<> graph;
+	for (size_t i = 0; i < 13; i++)
+	{
+		graph.AddVertex();
+	}
+
+	graph.AddEdge(4, 2);
+	graph.AddEdge(2, 3);
+	graph.AddEdge(3, 2);
+	graph.AddEdge(6, 0);
+	graph.AddEdge(0, 1);
+	graph.AddEdge(2, 0);
+	graph.AddEdge(11, 12);
+	graph.AddEdge(12, 9);
+	graph.AddEdge(9, 10);
+	graph.AddEdge(9, 11);
+	graph.AddEdge(8, 9);
+	graph.AddEdge(10, 12);
+	graph.AddEdge(11, 4);
+	graph.AddEdge(4, 3);
+	graph.AddEdge(3, 5);
+	graph.AddEdge(7, 8);
+	graph.AddEdge(8, 7);
+	graph.AddEdge(5, 4);
+	graph.AddEdge(0, 5);
+	graph.AddEdge(6, 4);
+	graph.AddEdge(6, 9);
+	graph.AddEdge(7, 6);
 	return graph;
 }
 
@@ -66,7 +99,7 @@ TEST(GraphTest, Basic)
 
 TEST(GraphTest, Path)
 {
-	auto graph = CreateGraph1();
+	auto graph = CreateUndirectedGraph();
 	EXPECT_EQ(13, graph.VertexCount());
 	EXPECT_EQ(13, graph.EdgeCount());
 
@@ -123,7 +156,7 @@ TEST(GraphTest, Path)
 
 TEST(GraphTest, UndirectedConnectedComponent)
 {
-	auto graph = CreateGraph1();
+	auto graph = CreateUndirectedGraph();
 	auto cc = UndirectedConnectedComponent(graph);
 
 	EXPECT_EQ(3, cc.Count());
@@ -164,4 +197,40 @@ TEST(GraphTest, UndirectedConnectedComponent)
 	EXPECT_EQ(2, cc.Id(10));
 	EXPECT_EQ(2, cc.Id(11));
 	EXPECT_EQ(2, cc.Id(12));
+}
+
+TEST(GraphTest, StronglyConnectedComponent)
+{
+	auto graph = CreateDirectedGraph();
+	StronglyConnectedComponent scc(graph);
+
+	EXPECT_EQ(5, scc.Count());
+
+	EXPECT_EQ(0, scc.Id(1));
+
+	EXPECT_EQ(1, scc.Id(0));
+	EXPECT_EQ(1, scc.Id(5));
+	EXPECT_EQ(1, scc.Id(4));
+	EXPECT_EQ(1, scc.Id(3));
+	EXPECT_EQ(1, scc.Id(2));
+
+	EXPECT_EQ(2, scc.Id(11));
+	EXPECT_EQ(2, scc.Id(12));
+	EXPECT_EQ(2, scc.Id(9));
+	EXPECT_EQ(2, scc.Id(10));
+
+	EXPECT_EQ(3, scc.Id(6));
+
+	EXPECT_EQ(4, scc.Id(8));
+	EXPECT_EQ(4, scc.Id(7));
+}
+
+TEST(GraphTest, Topology)
+{
+	auto graph = CreateDirectedGraph();
+	Topology topology(graph);
+
+	auto order = topology.Order();
+	auto expected = std::vector<size_t> { 7, 8, 6, 9, 11, 10, 12, 0, 5, 4, 2, 3, 1 };
+	EXPECT_EQ(expected, std::vector<size_t>(order.begin(), order.end()));
 }

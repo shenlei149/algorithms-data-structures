@@ -1,7 +1,10 @@
 #pragma once
 
 #include <algorithm>
+#include <span>
 #include <vector>
+
+#include "Traversals.h"
 
 namespace guozi::graph
 {
@@ -23,7 +26,8 @@ class Topology
 
 		bool OnExamineEdge(size_t) const { return true; }
 
-		bool OnFinishVertex(size_t vertexId)
+
+		bool OnFinishVertex(size_t vertexId) const
 		{
 			topology_.order_.push_back(vertexId);
 			return true;
@@ -42,17 +46,17 @@ public:
 		{
 			if (!visited[i])
 			{
-				BFS(graph, i, visitor, visited);
+				DFS(graph, i, visitor, visited);
 			}
 		}
 
 		std::reverse(order_.begin(), order_.end());
 	}
 
-	[[nodiscard]] const std::span<size_t> &Order() const { return order_; }
+	[[nodiscard]] std::span<const size_t> Order() const { return order_; }
 
 private:
-	std::vector<size_t> order__;
+	std::vector<size_t> order_;
 };
 
 } // namespace guozi::graph
