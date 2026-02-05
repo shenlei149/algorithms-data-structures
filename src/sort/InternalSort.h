@@ -3,6 +3,8 @@
 #include <iterator>
 #include <vector>
 
+#include "basic/Heap.h"
+
 namespace guozi::sort
 {
 
@@ -239,6 +241,20 @@ void QuickSort(Iterator begin, Iterator end, Less less = {})
 	auto p = QuickSortPartition(begin, end, less);
 	QuickSort(begin, p, less);
 	QuickSort(p + 1, end, less);
+}
+
+template<std::random_access_iterator Iterator,
+		 typename Less = std::less<typename std::iterator_traits<Iterator>::value_type>>
+void HeapSort(Iterator begin, Iterator end, Less less = {})
+{
+	using ValueType = typename std::iterator_traits<Iterator>::value_type;
+	guozi::basic::Heap<ValueType, Less> heap(begin, end, less);
+
+	for (Iterator it = begin; it < end; it++)
+	{
+		*it = heap.Top();
+		heap.Pop();
+	}
 }
 
 } // namespace guozi::sort

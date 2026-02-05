@@ -45,7 +45,9 @@ static const FunctionType MergeSort = [](IteratorType begin, IteratorType end) {
 
 static const FunctionType QuickSort = [](IteratorType begin, IteratorType end) { guozi::sort::QuickSort(begin, end); };
 
-static const std::array<FunctionType, 4> Functions { SelectionSort, InsertionSort, MergeSort, QuickSort };
+static const FunctionType HeapSort = [](IteratorType begin, IteratorType end) { guozi::sort::HeapSort(begin, end); };
+
+static const std::array<FunctionType, 5> Functions { SelectionSort, InsertionSort, MergeSort, QuickSort, HeapSort };
 
 inline DataType GenerateData(size_t length)
 {
