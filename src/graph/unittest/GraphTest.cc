@@ -120,14 +120,14 @@ TEST(GraphTest, Path)
 	EXPECT_FALSE(path1.HasPathTo(11));
 	EXPECT_FALSE(path1.HasPathTo(12));
 
-	EXPECT_EQ((std::vector<size_t> { 0 }), static_cast<std::vector<size_t>>(path1.PathTo(0)));
-	EXPECT_EQ((std::vector<size_t> { 0, 1 }), static_cast<std::vector<size_t>>(path1.PathTo(1)));
-	EXPECT_EQ((std::vector<size_t> { 0, 2 }), static_cast<std::vector<size_t>>(path1.PathTo(2)));
-	EXPECT_EQ((std::vector<size_t> { 0, 5, 3 }), static_cast<std::vector<size_t>>(path1.PathTo(3)));
-	EXPECT_EQ((std::vector<size_t> { 0, 5, 4 }), static_cast<std::vector<size_t>>(path1.PathTo(4)));
-	EXPECT_EQ((std::vector<size_t> { 0, 5 }), static_cast<std::vector<size_t>>(path1.PathTo(5)));
-	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path1.PathTo(7)));
-	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path1.PathTo(11)));
+	EXPECT_EQ((std::vector<size_t> { 0 }), static_cast<std::vector<size_t>>(path1.GetPathTo(0)));
+	EXPECT_EQ((std::vector<size_t> { 0, 1 }), static_cast<std::vector<size_t>>(path1.GetPathTo(1)));
+	EXPECT_EQ((std::vector<size_t> { 0, 2 }), static_cast<std::vector<size_t>>(path1.GetPathTo(2)));
+	EXPECT_EQ((std::vector<size_t> { 0, 5, 3 }), static_cast<std::vector<size_t>>(path1.GetPathTo(3)));
+	EXPECT_EQ((std::vector<size_t> { 0, 5, 4 }), static_cast<std::vector<size_t>>(path1.GetPathTo(4)));
+	EXPECT_EQ((std::vector<size_t> { 0, 5 }), static_cast<std::vector<size_t>>(path1.GetPathTo(5)));
+	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path1.GetPathTo(7)));
+	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path1.GetPathTo(11)));
 
 	Path path2(graph, 9);
 
@@ -146,12 +146,12 @@ TEST(GraphTest, Path)
 	EXPECT_FALSE(path2.HasPathTo(7));
 	EXPECT_FALSE(path2.HasPathTo(8));
 
-	EXPECT_EQ((std::vector<size_t> { 9 }), static_cast<std::vector<size_t>>(path2.PathTo(9)));
-	EXPECT_EQ((std::vector<size_t> { 9, 10 }), static_cast<std::vector<size_t>>(path2.PathTo(10)));
-	EXPECT_EQ((std::vector<size_t> { 9, 11 }), static_cast<std::vector<size_t>>(path2.PathTo(11)));
-	EXPECT_EQ((std::vector<size_t> { 9, 12 }), static_cast<std::vector<size_t>>(path2.PathTo(12)));
-	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.PathTo(7)));
-	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.PathTo(3)));
+	EXPECT_EQ((std::vector<size_t> { 9 }), static_cast<std::vector<size_t>>(path2.GetPathTo(9)));
+	EXPECT_EQ((std::vector<size_t> { 9, 10 }), static_cast<std::vector<size_t>>(path2.GetPathTo(10)));
+	EXPECT_EQ((std::vector<size_t> { 9, 11 }), static_cast<std::vector<size_t>>(path2.GetPathTo(11)));
+	EXPECT_EQ((std::vector<size_t> { 9, 12 }), static_cast<std::vector<size_t>>(path2.GetPathTo(12)));
+	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.GetPathTo(7)));
+	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.GetPathTo(3)));
 }
 
 TEST(GraphTest, UndirectedConnectedComponent)
