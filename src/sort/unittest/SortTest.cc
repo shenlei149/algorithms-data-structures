@@ -1,4 +1,4 @@
-#include "InternalSort.h"
+#include "sort/InternalSort.h"
 
 #include <random>
 

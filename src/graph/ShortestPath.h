@@ -54,15 +54,15 @@ protected:
 template<typename Graph, typename WeightType, typename Less = std::less<WeightType>>
 class DijkstraShortestPath : public ShortestPath<Graph, WeightType>
 {
+	// Bring base class members into scope to avoid prefixing with this->
+	using Base = ShortestPath<Graph, WeightType>;
+	using Base::distTo_;
+	using Base::edgeTo_;
+
 public:
 	DijkstraShortestPath(const Graph &graph, size_t source, Less less = Less {})
 		: ShortestPath<Graph, WeightType>(graph, source)
 	{
-		// Bring base class members into scope to avoid prefixing with this->
-		using Base = ShortestPath<Graph, WeightType>;
-		using Base::distTo_;
-		using Base::edgeTo_;
-
 		basic::IndexPriorityQueue<WeightType, Less> pq(graph.VertexCount(), less);
 		pq.Push(source, distTo_[source]);
 
@@ -77,10 +77,10 @@ public:
 				break;
 			}
 
-			for (size_t edgeId : graph.GetOutgoingEdgeIndices(w))
+			for (size_t edgeId : graph.OutgoingEdgeIndices(w))
 			{
 				size_t v = graph.GetDstVertexId(edgeId);
-				WeightType weight = graph.GetEdgeWeight(edgeId);
+				WeightType weight = static_cast<WeightType>(graph.GetEdge(edgeId));
 				auto newDist = distTo_[w] + weight;
 				if (less(newDist, distTo_[v]))
 				{
