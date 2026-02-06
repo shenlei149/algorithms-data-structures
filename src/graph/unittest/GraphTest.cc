@@ -1,68 +1,12 @@
+#include <cmath>
+
 #include <gtest/gtest.h>
 
-#include "ConnectedComponent.h"
-#include "Path.h"
-#include "Topology.h"
-
-using namespace guozi::graph;
-
-UndirectedGraph<> CreateUndirectedGraph()
-{
-	UndirectedGraph<> graph;
-	for (size_t i = 0; i < 13; i++)
-	{
-		graph.AddVertex();
-	}
-
-	graph.AddEdge(0, 5);
-	graph.AddEdge(4, 3);
-	graph.AddEdge(0, 1);
-	graph.AddEdge(9, 12);
-	graph.AddEdge(6, 4);
-	graph.AddEdge(5, 4);
-	graph.AddEdge(0, 2);
-	graph.AddEdge(11, 12);
-	graph.AddEdge(9, 10);
-	graph.AddEdge(0, 6);
-	graph.AddEdge(7, 8);
-	graph.AddEdge(9, 11);
-	graph.AddEdge(5, 3);
-
-	return graph;
-}
-
-DirectedGraph<> CreateDirectedGraph()
-{
-	DirectedGraph<> graph;
-	for (size_t i = 0; i < 13; i++)
-	{
-		graph.AddVertex();
-	}
-
-	graph.AddEdge(4, 2);
-	graph.AddEdge(2, 3);
-	graph.AddEdge(3, 2);
-	graph.AddEdge(6, 0);
-	graph.AddEdge(0, 1);
-	graph.AddEdge(2, 0);
-	graph.AddEdge(11, 12);
-	graph.AddEdge(12, 9);
-	graph.AddEdge(9, 10);
-	graph.AddEdge(9, 11);
-	graph.AddEdge(8, 9);
-	graph.AddEdge(10, 12);
-	graph.AddEdge(11, 4);
-	graph.AddEdge(4, 3);
-	graph.AddEdge(3, 5);
-	graph.AddEdge(7, 8);
-	graph.AddEdge(8, 7);
-	graph.AddEdge(5, 4);
-	graph.AddEdge(0, 5);
-	graph.AddEdge(6, 4);
-	graph.AddEdge(6, 9);
-	graph.AddEdge(7, 6);
-	return graph;
-}
+#include "Factory.h"
+#include "graph/ConnectedComponent.h"
+#include "graph/Path.h"
+#include "graph/ShortestPath.h"
+#include "graph/Topology.h"
 
 TEST(GraphTest, Basic)
 {
@@ -120,14 +64,14 @@ TEST(GraphTest, Path)
 	EXPECT_FALSE(path1.HasPathTo(11));
 	EXPECT_FALSE(path1.HasPathTo(12));
 
-	EXPECT_EQ((std::vector<size_t> { 0 }), static_cast<std::vector<size_t>>(path1.PathTo(0)));
-	EXPECT_EQ((std::vector<size_t> { 0, 1 }), static_cast<std::vector<size_t>>(path1.PathTo(1)));
-	EXPECT_EQ((std::vector<size_t> { 0, 2 }), static_cast<std::vector<size_t>>(path1.PathTo(2)));
-	EXPECT_EQ((std::vector<size_t> { 0, 5, 3 }), static_cast<std::vector<size_t>>(path1.PathTo(3)));
-	EXPECT_EQ((std::vector<size_t> { 0, 5, 4 }), static_cast<std::vector<size_t>>(path1.PathTo(4)));
-	EXPECT_EQ((std::vector<size_t> { 0, 5 }), static_cast<std::vector<size_t>>(path1.PathTo(5)));
-	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path1.PathTo(7)));
-	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path1.PathTo(11)));
+	EXPECT_EQ((std::vector<size_t> { 0 }), static_cast<std::vector<size_t>>(path1.GetPathTo(0)));
+	EXPECT_EQ((std::vector<size_t> { 0, 1 }), static_cast<std::vector<size_t>>(path1.GetPathTo(1)));
+	EXPECT_EQ((std::vector<size_t> { 0, 2 }), static_cast<std::vector<size_t>>(path1.GetPathTo(2)));
+	EXPECT_EQ((std::vector<size_t> { 0, 5, 3 }), static_cast<std::vector<size_t>>(path1.GetPathTo(3)));
+	EXPECT_EQ((std::vector<size_t> { 0, 5, 4 }), static_cast<std::vector<size_t>>(path1.GetPathTo(4)));
+	EXPECT_EQ((std::vector<size_t> { 0, 5 }), static_cast<std::vector<size_t>>(path1.GetPathTo(5)));
+	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path1.GetPathTo(7)));
+	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path1.GetPathTo(11)));
 
 	Path path2(graph, 9);
 
@@ -146,12 +90,12 @@ TEST(GraphTest, Path)
 	EXPECT_FALSE(path2.HasPathTo(7));
 	EXPECT_FALSE(path2.HasPathTo(8));
 
-	EXPECT_EQ((std::vector<size_t> { 9 }), static_cast<std::vector<size_t>>(path2.PathTo(9)));
-	EXPECT_EQ((std::vector<size_t> { 9, 10 }), static_cast<std::vector<size_t>>(path2.PathTo(10)));
-	EXPECT_EQ((std::vector<size_t> { 9, 11 }), static_cast<std::vector<size_t>>(path2.PathTo(11)));
-	EXPECT_EQ((std::vector<size_t> { 9, 12 }), static_cast<std::vector<size_t>>(path2.PathTo(12)));
-	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.PathTo(7)));
-	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.PathTo(3)));
+	EXPECT_EQ((std::vector<size_t> { 9 }), static_cast<std::vector<size_t>>(path2.GetPathTo(9)));
+	EXPECT_EQ((std::vector<size_t> { 9, 10 }), static_cast<std::vector<size_t>>(path2.GetPathTo(10)));
+	EXPECT_EQ((std::vector<size_t> { 9, 11 }), static_cast<std::vector<size_t>>(path2.GetPathTo(11)));
+	EXPECT_EQ((std::vector<size_t> { 9, 12 }), static_cast<std::vector<size_t>>(path2.GetPathTo(12)));
+	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.GetPathTo(7)));
+	EXPECT_EQ((std::vector<size_t> {}), static_cast<std::vector<size_t>>(path2.GetPathTo(3)));
 }
 
 TEST(GraphTest, UndirectedConnectedComponent)
@@ -233,4 +177,19 @@ TEST(GraphTest, Topology)
 	auto order = topology.Order();
 	auto expected = std::vector<size_t> { 7, 8, 6, 9, 11, 10, 12, 0, 5, 4, 2, 3, 1 };
 	EXPECT_EQ(expected, std::vector<size_t>(order.begin(), order.end()));
+}
+
+TEST(GraphTest, Dijkstra)
+{
+	auto graph = CreateWeightedDirectedGraph();
+	auto shortestPath = DijkstraShortestPath<decltype(graph), double>(graph, 0);
+
+	EXPECT_TRUE(std::abs(shortestPath.DistTo(0) - 0.0) < 1e-9);
+	EXPECT_TRUE(std::abs(shortestPath.DistTo(1) - 1.05) < 1e-9);
+	EXPECT_TRUE(std::abs(shortestPath.DistTo(2) - 0.26) < 1e-9);
+	EXPECT_TRUE(std::abs(shortestPath.DistTo(3) - 0.99) < 1e-9);
+	EXPECT_TRUE(std::abs(shortestPath.DistTo(4) - 0.38) < 1e-9);
+	EXPECT_TRUE(std::abs(shortestPath.DistTo(5) - 0.73) < 1e-9);
+	EXPECT_TRUE(std::abs(shortestPath.DistTo(6) - 1.51) < 1e-9);
+	EXPECT_TRUE(std::abs(shortestPath.DistTo(7) - 0.60) < 1e-9);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <variant>
 #include <vector>
 
 namespace guozi::graph

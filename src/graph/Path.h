@@ -30,10 +30,6 @@ public:
 
 	operator std::vector<size_t>() const { return path_; }
 
-private:
-	template<typename T>
-	friend class Path;
-
 	PathResult(std::vector<size_t> path)
 		: path_(std::move(path))
 	{}
@@ -84,7 +80,7 @@ public:
 	[[nodiscard]] bool HasPathTo(size_t dstId) const { return visited_[dstId] != 0; }
 
 	[[nodiscard]]
-	PathResult PathTo(size_t dstId) const
+	PathResult GetPathTo(size_t dstId) const
 	{
 		if (!HasPathTo(dstId))
 		{
