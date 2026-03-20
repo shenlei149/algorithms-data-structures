@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.31)
 
 project(guozi_algorithms_data_structures)
 
+enable_testing()
+
 find_package(GTest REQUIRED)
 
 set(CMAKE_CXX_STANDARD 20)
