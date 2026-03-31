@@ -1,0 +1,4 @@
+add_executable(BinarySearchTreeTest BinarySearchTreeTest.cc)
+target_link_libraries(BinarySearchTreeTest guozi_tree GTest::gtest_main)
+
+add_test(NAME BinarySearchTreeTest COMMAND BinarySearchTreeTest)
