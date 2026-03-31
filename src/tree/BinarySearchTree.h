@@ -185,6 +185,43 @@ public:
 		Delete(it.current_);
 	}
 
+	Iterator Select(int i) const
+	{
+		if (i < 0 || i >= static_cast<int>(Size()))
+		{
+			return end(); // i is out of bounds
+		}
+
+		return Iterator(Select(root_.get(), i));
+	}
+
+	int Rank(const T &value) const
+	{
+		Node *current = root_.get();
+		int rank = 0;
+		while (current)
+		{
+			if (compare_(value, current->data_))
+			{
+				current = current->left_.get();
+			}
+			else if (compare_(current->data_, value))
+			{
+				int leftSize = current->left_ ? current->left_->size_ : 0;
+				rank += leftSize + 1; // count the left subtree and the current node
+				current = current->right_.get();
+			}
+			else
+			{
+				int leftSize = current->left_ ? current->left_->size_ : 0;
+				rank += leftSize; // count only the left subtree
+				return rank;
+			}
+		}
+
+		return -1; // value not found
+	}
+
 	Iterator begin() const { return Iterator(GetMinNode(root_.get())); }
 
 	Iterator end() const { return Iterator(nullptr); }
@@ -322,27 +359,25 @@ private:
 		}
 	}
 
-	// 内部递归查找 i-th 最小元素
 	Node *Select(Node *x, int i) const
 	{
 		if (!x)
 		{
 			return nullptr;
 		}
-		int leftSize = x->left_ ? x->left_->size_ : 0;
-		int k = leftSize + 1; // 当前节点在当前子树中的排名
 
-		if (i == k)
+		int leftSize = x->left_ ? x->left_->size_ : 0;
+		if (i == leftSize)
 		{
 			return x;
 		}
-		if (i < k)
+		if (i < leftSize)
 		{
 			return Select(x->left_.get(), i);
 		}
 		else
 		{
-			return Select(x->right_.get(), i - k);
+			return Select(x->right_.get(), i - leftSize - 1);
 		}
 	}
 

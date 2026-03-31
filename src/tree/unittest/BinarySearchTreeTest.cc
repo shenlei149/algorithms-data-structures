@@ -80,7 +80,7 @@ void ExpectTreeMatches(const guozi::tree::BinarySearchTree<int> &tree, const std
 	std::vector<int> expectedBackward(expected.rbegin(), expected.rend());
 	EXPECT_EQ(expectedBackward, backward);
 }
-}
+} // namespace
 
 TEST(BinarySearchTreeTest, BoundaryEmptyTree)
 {
@@ -197,6 +197,44 @@ TEST(BinarySearchTreeTest, DeleteAllNodesToEmptyTree)
 	EXPECT_EQ(0, tree.Size());
 	EXPECT_EQ(tree.begin(), tree.end());
 	EXPECT_EQ(tree.Find(4), tree.end());
+}
+
+TEST(BinarySearchTreeTest, Select)
+{
+	guozi::tree::BinarySearchTree<int> tree;
+	for (int value : { 5, 3, 7, 2, 4, 6, 8 })
+	{
+		tree.Insert(value);
+	}
+
+	EXPECT_EQ(tree.end(), tree.Select(-1));
+	EXPECT_EQ(tree.end(), tree.Select(7));
+
+	for (int i = 0; i < static_cast<int>(tree.Size()); ++i)
+	{
+		auto it = tree.Select(i);
+		ASSERT_NE(tree.end(), it);
+		EXPECT_EQ(i + 2, *it);
+	}
+}
+
+TEST(BinarySearchTreeTest, Rank)
+{
+	guozi::tree::BinarySearchTree<int> tree;
+	for (int value : { 5, 3, 7, 2, 4, 6, 8 })
+	{
+		tree.Insert(value);
+	}
+
+	EXPECT_EQ(-1, tree.Rank(1));
+	EXPECT_EQ(0, tree.Rank(2));
+	EXPECT_EQ(1, tree.Rank(3));
+	EXPECT_EQ(2, tree.Rank(4));
+	EXPECT_EQ(3, tree.Rank(5));
+	EXPECT_EQ(4, tree.Rank(6));
+	EXPECT_EQ(5, tree.Rank(7));
+	EXPECT_EQ(6, tree.Rank(8));
+	EXPECT_EQ(-1, tree.Rank(9));
 }
 
 TEST(BinarySearchTreeTest, LargeDatasetCoversPublicApisAndDeleteCases)
