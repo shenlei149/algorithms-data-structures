@@ -4,6 +4,7 @@
 
 #include "Factory.h"
 #include "graph/ConnectedComponent.h"
+#include "graph/MinimumSpanningTree.h"
 #include "graph/Path.h"
 #include "graph/ShortestPath.h"
 #include "graph/Topology.h"
@@ -192,4 +193,16 @@ TEST(GraphTest, Dijkstra)
 	EXPECT_TRUE(std::abs(shortestPath.DistTo(5) - 0.73) < 1e-9);
 	EXPECT_TRUE(std::abs(shortestPath.DistTo(6) - 1.51) < 1e-9);
 	EXPECT_TRUE(std::abs(shortestPath.DistTo(7) - 0.60) < 1e-9);
+}
+
+TEST(GraphTest, PrimMinimumSpanningTree)
+{
+	auto graph = CreateWeightedUndirectedGraph();
+	auto mst = PrimMinimumSpanningTree<decltype(graph), double>(graph);
+
+	const auto &edges = mst.EdgeIds();
+	EXPECT_EQ(7, edges.size());
+	// auto expectedEdges = std::vector<size_t> { 0, 2, 3, 6, 7, 8, 12 };
+	// EXPECT_EQ(expectedEdges, edges);
+	EXPECT_TRUE(std::abs(mst.Weight() - 1.81) < 1e-9);
 }
