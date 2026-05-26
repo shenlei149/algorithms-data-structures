@@ -200,9 +200,23 @@ TEST(GraphTest, PrimMinimumSpanningTree)
 	auto graph = CreateWeightedUndirectedGraph();
 	auto mst = PrimMinimumSpanningTree<decltype(graph), double>(graph);
 
-	const auto &edges = mst.EdgeIds();
+	auto edges = mst.EdgeIds();
 	EXPECT_EQ(7, edges.size());
-	// auto expectedEdges = std::vector<size_t> { 0, 2, 3, 6, 7, 8, 12 };
-	// EXPECT_EQ(expectedEdges, edges);
+	auto expectedEdges = std::vector<size_t> { 0, 2, 3, 6, 7, 8, 12 };
+	std::sort(edges.begin(), edges.end());
+	EXPECT_EQ(expectedEdges, edges);
+	EXPECT_TRUE(std::abs(mst.Weight() - 1.81) < 1e-9);
+}
+
+TEST(GraphTest, KruskalMinimumSpanningTree)
+{
+	auto graph = CreateWeightedUndirectedGraph();
+	auto mst = KruskalMinimumSpanningTree<decltype(graph), double>(graph);
+
+	auto edges = mst.EdgeIds();
+	EXPECT_EQ(7, edges.size());
+	auto expectedEdges = std::vector<size_t> { 0, 2, 3, 6, 7, 8, 12 };
+	std::sort(edges.begin(), edges.end());
+	EXPECT_EQ(expectedEdges, edges);
 	EXPECT_TRUE(std::abs(mst.Weight() - 1.81) < 1e-9);
 }

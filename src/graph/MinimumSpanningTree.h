@@ -2,10 +2,12 @@
 
 #include <cstdint>
 #include <map>
+#include <numeric>
 #include <vector>
 
 #include "Graph.h"
 #include "basic/Heap.h"
+#include "basic/UnionFind.h"
 
 namespace guozi::graph
 {
@@ -104,6 +106,42 @@ public:
 						minHeap.Push({ dstId, key[dstId] });
 					}
 				}
+			}
+		}
+	}
+};
+
+template<typename Graph, typename WeightType, typename Less = std::less<WeightType>>
+class KruskalMinimumSpanningTree : public MinimumSpanningTree<Graph, WeightType>
+{
+	// Bring base class members into scope to avoid prefixing with this->
+	using Base = MinimumSpanningTree<Graph, WeightType>;
+
+public:
+	KruskalMinimumSpanningTree(const Graph &graph, Less less = Less {})
+		: Base()
+	{
+		Base::edges_.reserve(graph.VertexCount() - 1);
+
+		std::vector<size_t> edgeIds(graph.EdgeCount());
+		std::iota(edgeIds.begin(), edgeIds.end(), 0);
+
+		std::sort(
+			edgeIds.begin(),
+			edgeIds.end(),
+			[&graph, &less](size_t a, size_t b)
+			{ return less(static_cast<WeightType>(graph.GetEdge(a)), static_cast<WeightType>(graph.GetEdge(b))); });
+
+		basic::UnionFind uf(graph.VertexCount());
+		for (auto edgeId : edgeIds)
+		{
+			size_t srcId = graph.GetSrcVertexId(edgeId);
+			size_t dstId = graph.GetDstVertexId(edgeId);
+			if (!uf.Connected(srcId, dstId))
+			{
+				uf.Union(srcId, dstId);
+				Base::edges_.push_back(edgeId);
+				Base::weight_ += static_cast<WeightType>(graph.GetEdge(edgeId));
 			}
 		}
 	}
