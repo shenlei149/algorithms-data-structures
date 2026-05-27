@@ -80,6 +80,22 @@ public:
 
 	[[nodiscard]] size_t GetDstVertexId(size_t edgeId) const { return edges_[edgeId].dst_; }
 
+	[[nodiscard]]
+	size_t GetOtherVertexId(size_t edgeId, size_t vertexId) const
+	{
+		if (edges_[edgeId].src_ == vertexId)
+		{
+			return edges_[edgeId].dst_;
+		}
+
+		if (edges_[edgeId].dst_ == vertexId)
+		{
+			return edges_[edgeId].src_;
+		}
+
+		throw std::invalid_argument("Vertex is not incident to edge");
+	}
+
 	[[nodiscard]] const V &GetVertex(size_t vertexId) const { return vertices_[vertexId].data_; }
 
 	[[nodiscard]] const E &GetEdge(size_t edgeId) const { return edges_[edgeId].data_; }

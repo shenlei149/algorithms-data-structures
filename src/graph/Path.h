@@ -10,9 +10,6 @@
 namespace guozi::graph
 {
 
-template<typename Graph>
-class Path;
-
 class PathResult
 {
 public:

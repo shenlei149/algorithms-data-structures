@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdexcept>
 #include <vector>
 
@@ -61,6 +63,8 @@ public:
 		data_.push_back(std::move(value));
 		HeapifyUp(data_.size() - 1);
 	}
+
+	bool Empty() const { return data_.empty(); }
 
 private:
 	void Heapify()
