@@ -26,7 +26,6 @@ class Topology
 
 		bool OnExamineEdge(size_t) const { return true; }
 
-
 		bool OnFinishVertex(size_t vertexId) const
 		{
 			topology_.order_.push_back(vertexId);

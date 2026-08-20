@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <memory>
+#include <span>
 #include <utility>
 
 namespace guozi::tree
@@ -23,6 +24,17 @@ private:
 			: data_(data)
 			, parent_(parent)
 		{}
+
+		template<typename Func>
+		static void PreOrderTraversal(Node *node, Func &&callback)
+		{
+			if (node)
+			{
+				callback(node->data_);
+				PreOrderTraversal(node->left_.get(), std::forward<Func>(callback));
+				PreOrderTraversal(node->right_.get(), std::forward<Func>(callback));
+			}
+		}
 
 		template<typename Func>
 		static void InOrderTraversal(Node *node, Func &&callback)
@@ -80,10 +92,26 @@ public:
 	};
 
 public:
-	BinarySearchTree(Compare compare = Compare {})
+	explicit BinarySearchTree(Compare compare = Compare {})
 		: root_(nullptr)
 		, compare_(compare)
 	{}
+
+	BinarySearchTree(const BinarySearchTree &) = delete;
+	BinarySearchTree &operator=(const BinarySearchTree &) = delete;
+
+	BinarySearchTree(BinarySearchTree &&) = default;
+	BinarySearchTree &operator=(BinarySearchTree &&) = default;
+
+	// values must contain unique keys and represent a BST preorder traversal
+	static BinarySearchTree FromPreOrder(const std::span<const T> values, Compare compare = Compare {})
+	{
+		BinarySearchTree tree(compare);
+		size_t index = 0;
+		tree.root_ = BuildFromPreOrder(values, index, nullptr /*min*/, nullptr /*max*/, nullptr /*parent*/, compare);
+
+		return tree;
+	}
 
 	Iterator Find(const T &value) const
 	{
@@ -120,7 +148,13 @@ public:
 	Iterator Successor(const T &value) const { return Successor(Find(value)); }
 
 	template<typename Func>
-	void ForEach(Func &&callback) const
+	void ForEachPreOrder(Func &&callback) const
+	{
+		Node::PreOrderTraversal(root_.get(), std::forward<Func>(callback));
+	}
+
+	template<typename Func>
+	void ForEachInOrder(Func &&callback) const
 	{
 		Node::InOrderTraversal(root_.get(), std::forward<Func>(callback));
 	}
@@ -227,6 +261,34 @@ public:
 	Iterator end() const { return Iterator(nullptr); }
 
 private:
+	static std::unique_ptr<Node> BuildFromPreOrder(const std::span<const T> values,
+												   size_t &index,
+												   const T *min,
+												   const T *max,
+												   Node *parent,
+												   Compare compare)
+	{
+		if (index >= values.size())
+		{
+			return nullptr;
+		}
+
+		const T &value = values[index];
+		if ((min && compare(value, *min)) || (max && compare(*max, value)))
+		{
+			return nullptr; // value is out of the valid range
+		}
+
+		auto node = std::make_unique<Node>(value, parent);
+		index++;
+
+		node->left_ = BuildFromPreOrder(values, index, min, &value, node.get(), compare);
+		node->right_ = BuildFromPreOrder(values, index, &value, max, node.get(), compare);
+
+		UpdateSize(node.get());
+		return node;
+	}
+
 	void Delete(Node *nodeToDelete)
 	{
 		if (!nodeToDelete->left_ && !nodeToDelete->right_)

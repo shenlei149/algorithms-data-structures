@@ -7,3 +7,8 @@ add_executable(KnapsackTest KnapsackTest.cc)
 target_link_libraries(KnapsackTest guozi_dp GTest::gtest_main)
 
 add_test(NAME KnapsackTest COMMAND KnapsackTest)
+
+add_executable(SequenceAlignmentTest SequenceAlignmentTest.cc)
+target_link_libraries(SequenceAlignmentTest guozi_dp GTest::gtest_main)
+
+add_test(NAME SequenceAlignmentTest COMMAND SequenceAlignmentTest)
