@@ -9,10 +9,20 @@
 
 namespace
 {
-std::vector<int> InOrderValues(const guozi::tree::BinarySearchTree<int> &tree)
+
+template<typename Compare>
+std::vector<int> PreOrderValues(const guozi::tree::BinarySearchTree<int, Compare> &tree)
 {
 	std::vector<int> values;
-	tree.ForEach([&values](int value) { values.push_back(value); });
+	tree.ForEachPreOrder([&values](int value) { values.push_back(value); });
+	return values;
+}
+
+template<typename Compare>
+std::vector<int> InOrderValues(const guozi::tree::BinarySearchTree<int, Compare> &tree)
+{
+	std::vector<int> values;
+	tree.ForEachInOrder([&values](int value) { values.push_back(value); });
 	return values;
 }
 
@@ -44,6 +54,7 @@ void ExpectTreeMatches(const guozi::tree::BinarySearchTree<int> &tree, const std
 {
 	EXPECT_EQ(expected.size(), tree.Size());
 	EXPECT_EQ(expected, InOrderValues(tree));
+	EXPECT_EQ(expected.size(), PreOrderValues(tree).size());
 
 	std::vector<int> forward;
 	for (auto it = tree.begin(); it != tree.end(); ++it)
@@ -82,6 +93,51 @@ void ExpectTreeMatches(const guozi::tree::BinarySearchTree<int> &tree, const std
 }
 } // namespace
 
+TEST(BinarySearchTreeTest, BuildFromPreOrder)
+{
+	const std::vector<int> preOrder { 5, 3, 2, 4, 7, 6, 8 };
+	const auto tree = guozi::tree::BinarySearchTree<int>::FromPreOrder(preOrder);
+
+	EXPECT_EQ(preOrder.size(), tree.Size());
+	EXPECT_EQ(preOrder, PreOrderValues(tree));
+	EXPECT_EQ((std::vector<int> { 2, 3, 4, 5, 6, 7, 8 }), InOrderValues(tree));
+}
+
+TEST(BinarySearchTreeTest, BuildFromPreOrderHandlesEmptyInput)
+{
+	const auto tree = guozi::tree::BinarySearchTree<int>::FromPreOrder(std::span<const int> {});
+
+	EXPECT_EQ(0, tree.Size());
+	EXPECT_TRUE(PreOrderValues(tree).empty());
+	EXPECT_TRUE(InOrderValues(tree).empty());
+	EXPECT_EQ(tree.begin(), tree.end());
+}
+
+TEST(BinarySearchTreeTest, BuildFromPreOrderPreservesSkewedShapes)
+{
+	const std::vector<int> leftSkewed { 5, 4, 3, 2, 1 };
+	const auto leftTree = guozi::tree::BinarySearchTree<int>::FromPreOrder(leftSkewed);
+	EXPECT_EQ(leftSkewed, PreOrderValues(leftTree));
+	EXPECT_EQ((std::vector<int> { 1, 2, 3, 4, 5 }), InOrderValues(leftTree));
+
+	const std::vector<int> rightSkewed { 1, 2, 3, 4, 5 };
+	const auto rightTree = guozi::tree::BinarySearchTree<int>::FromPreOrder(rightSkewed);
+	EXPECT_EQ(rightSkewed, PreOrderValues(rightTree));
+	EXPECT_EQ((std::vector<int> { 1, 2, 3, 4, 5 }), InOrderValues(rightTree));
+}
+
+TEST(BinarySearchTreeTest, BuildFromPreOrderSupportsCustomComparator)
+{
+	const std::vector<int> preOrder { 5, 7, 9, 8, 6, 3 };
+	const auto tree = guozi::tree::BinarySearchTree<int, std::greater<int>>::FromPreOrder(preOrder);
+
+	EXPECT_EQ(preOrder.size(), tree.Size());
+	EXPECT_EQ(preOrder, PreOrderValues(tree));
+	EXPECT_EQ((std::vector<int> { 9, 8, 7, 6, 5, 3 }), InOrderValues(tree));
+	EXPECT_EQ(9, *tree.Min());
+	EXPECT_EQ(3, *tree.Max());
+}
+
 TEST(BinarySearchTreeTest, BoundaryEmptyTree)
 {
 	guozi::tree::BinarySearchTree<int> tree;
@@ -112,6 +168,7 @@ TEST(BinarySearchTreeTest, InsertDuplicateValuesAndInOrderTraversal)
 
 	EXPECT_EQ(5, tree.Size());
 	EXPECT_EQ((std::vector<int> { 1, 3, 5, 7, 9 }), InOrderValues(tree));
+	EXPECT_EQ((std::vector<int> { 5, 3, 1, 7, 9 }), PreOrderValues(tree));
 	EXPECT_EQ(1, *tree.Min());
 	EXPECT_EQ(9, *tree.Max());
 }
@@ -141,10 +198,12 @@ TEST(BinarySearchTreeTest, DeleteLeafAndOneChildNode)
 	tree.Delete(2);
 	EXPECT_EQ(4, tree.Size());
 	EXPECT_EQ((std::vector<int> { 3, 4, 5, 7 }), InOrderValues(tree));
+	EXPECT_EQ((std::vector<int> { 5, 3, 4, 7 }), PreOrderValues(tree));
 
 	tree.Delete(3);
 	EXPECT_EQ(3, tree.Size());
 	EXPECT_EQ((std::vector<int> { 4, 5, 7 }), InOrderValues(tree));
+	EXPECT_EQ((std::vector<int> { 5, 4, 7 }), PreOrderValues(tree));
 	EXPECT_EQ(tree.end(), tree.Predecessor(4));
 	EXPECT_EQ(5, *tree.Successor(4));
 }
@@ -161,6 +220,7 @@ TEST(BinarySearchTreeTest, DeleteTwoChildrenNonRootNode)
 	EXPECT_EQ(6, tree.Size());
 	EXPECT_EQ(tree.end(), tree.Find(3));
 	EXPECT_EQ((std::vector<int> { 2, 4, 5, 6, 7, 8 }), InOrderValues(tree));
+	EXPECT_EQ((std::vector<int> { 5, 2, 4, 7, 6, 8 }), PreOrderValues(tree));
 	EXPECT_EQ(2, *tree.Min());
 	EXPECT_EQ(8, *tree.Max());
 }
@@ -177,6 +237,7 @@ TEST(BinarySearchTreeTest, DeleteTwoChildrenRootNode)
 	EXPECT_EQ(6, tree.Size());
 	EXPECT_EQ(tree.end(), tree.Find(5));
 	EXPECT_EQ((std::vector<int> { 2, 3, 4, 6, 7, 8 }), InOrderValues(tree));
+	EXPECT_EQ((std::vector<int> { 4, 3, 2, 7, 6, 8 }), PreOrderValues(tree));
 	EXPECT_EQ(2, *tree.Min());
 	EXPECT_EQ(8, *tree.Max());
 }

@@ -11,8 +11,10 @@ namespace
 using guozi::dp::NeedlemanWunsch;
 using guozi::dp::SequenceAlignmentResult;
 
-void ExpectValidAlignment(const std::string &seq1, const std::string &seq2,
-						  int64_t mismatchPenalty, int64_t gapPenalty,
+void ExpectValidAlignment(const std::string &seq1,
+						  const std::string &seq2,
+						  int64_t mismatchPenalty,
+						  int64_t gapPenalty,
 						  const SequenceAlignmentResult &result)
 {
 	ASSERT_EQ(result.AlignedSeq1().size(), result.AlignedSeq2().size());
