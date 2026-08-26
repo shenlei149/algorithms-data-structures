@@ -19,6 +19,7 @@ private:
 	{
 		[[no_unique_address]] V data_;
 		std::vector<size_t> outgoingEdgeIndices_;
+		std::vector<size_t> incomingEdgeIndices_;
 
 		Vertex(const V &data)
 			: data_(data)
@@ -58,9 +59,11 @@ public:
 
 		size_t newEdgeIdx = edges_.size() - 1;
 		vertices_[srcId].outgoingEdgeIndices_.push_back(newEdgeIdx);
+		vertices_[dstId].incomingEdgeIndices_.push_back(newEdgeIdx);
 		if constexpr (!Directed)
 		{
 			vertices_[dstId].outgoingEdgeIndices_.push_back(newEdgeIdx);
+			vertices_[srcId].incomingEdgeIndices_.push_back(newEdgeIdx);
 		}
 
 		return newEdgeIdx;
@@ -74,6 +77,12 @@ public:
 	const std::vector<size_t> &OutgoingEdgeIndices(size_t vertexId) const
 	{
 		return vertices_[vertexId].outgoingEdgeIndices_;
+	}
+
+	[[nodiscard]]
+	const std::vector<size_t> &IncomingEdgeIndices(size_t vertexId) const
+	{
+		return vertices_[vertexId].incomingEdgeIndices_;
 	}
 
 	[[nodiscard]] size_t GetSrcVertexId(size_t edgeId) const { return edges_[edgeId].src_; }
